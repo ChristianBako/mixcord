@@ -3,8 +3,8 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title></title>
-        <meta name="description" content="">
+        <title>Mixcord</title>
+        <meta name="A website for CS275" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="manifest" href="site.webmanifest">
@@ -20,13 +20,52 @@
         <![endif]-->
 
         <!-- Add your site or application content here -->
-        <p>Hello world! This is HTML5 Boilerplate.</p>
+        <div id="login">
+            <h1>Welcome To Mixcord</h1>
+            <p>Username</p>
+            <input id="username" type="textarea" name="Username">
+            <br>
+            <p>Password</p>
+            <input id="password" type="password" name="Password">  
+            <br>
+            <input type="button" value="Login" id="loginAttempt">
+            <script>
+                ("#loginAttempt").click(function(event) {
+                    username = ("#username").val()
+                    password = ("#password").val()
+
+                    $.ajax({
+                      url: 'localhost:8080/login'+,
+                      type: 'GET',
+                     //dataType: 'jsonp',
+                      //data: {user: username,pass: password},
+                      complete: function(xhr, textStatus) {
+                        //called when complete
+                      },
+                      success: function(data, textStatus, xhr) {
+                        
+                      },
+                      error: function(xhr, textStatus, errorThrown) {
+                        //called when there is an error
+                      }
+                    });
+                    
+                });
+            </script>   
+        </div>
+
+        <div id="mainmenu"></div>
+        <div id="chatscreen"></div>
+
         <script src="js/vendor/modernizr-3.5.0.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.2.1.min.js"><\/script>')</script>
         <script src="js/plugins.js"></script>
         <script src="js/main.js"></script>
 
+        <script>
+            //("#login").slideUp("slow");
+        </script>
         <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
         <script>
             window.ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;
