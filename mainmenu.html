@@ -1,30 +1,34 @@
-
 <nav id="menuBar" class="navbar navbar-dark sticky-top bg-dark">
-	<a id="nowPlaying" class="navbar-brand"></a>
-	<ul class="navbar-nav">
-		<li class="nav-item text-nowrap">
-			<a class="nav-link">Log Off</a>
-		</li>
-	</ul>
+    <a id="nowPlaying" class="navbar-brand">Now Playing: Nothing</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#notificationList" aria-controls="notificationList" aria-expanded="false" aria-label="Toggle Notifications">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="notificationList" style>
+        <ul class="nav-bar mr-auto" id="notifications">
+            
+        </ul>
+        <a id="logOffButton" class="nav-link">Log Off</a>
+    </div>
 </nav>
-<div id="mainContent" class="container-fluid">
-	<nav id="roomList" class="col-md-2 bg-light sidebar">
-		<div class="sidebar-sticky">
-			<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-				<span>Rooms:</span>
-			</h6>
-		</div>
-	</nav>
-	<main role="main" class="col-md-9 col-lg-10 pt-3 px-4">
-		<div id="spotifyPlayer" class="col">
-		</div>
-		<div id="userComms" class="col">
-			<div id="userList">
-			</div>
-			<div id="chatContent">
-			</div>
-			<div id="inputBox">
-			</div>
-		</div>
-	</main>
+<div id="mainContainer" class="container-fluid">
+    <nav id="roomContainer" class="col-md-2 bg-light sidebar">
+        <div class="sidebar-sticky">
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                <span>Rooms:</span>
+                <a class="d-flex align-items-center text-muted" href="#">
+                <span data-feather="plus-circle"></span>
+              </a>
+            </h6>
+            <ul id="roomList" class="nav flex-column mb-2">
+            
+            </ul>
+        </div>
+    </nav>
+    <main role="main" class="col-md-9 col-lg-10 pt-3 px-4">
+        <div id="spotifyPlayer" class="col">
+        </div>
+        <div id="userComms" class="col">
+            
+        </div>
+    </main>
 </div>
