@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Spotify Web Playback SDK Quick Start Tutorial</title>
+</head>
+<body>
+  <h1>Spotify Web Playback SDK Quick Start Tutorial</h1>
+  <h2>Open your console log: <code>View > Developer > JavaScript Console</code></h2>
+
+  <script src="https://sdk.scdn.co/spotify-player.js"></script>
+  <script>
+    window.onSpotifyWebPlaybackSDKReady = () => {
+      const token = 'BQA3t8j6QGP8dMELWQM2d6B8XrMQja5daR1Qd1y2EBEb2cEY-SoyEEmJ_NPaCEzNXBazg8KEEQ3iSGNA8KkaVcrZvoHs2PGcy5cQdux5CQjbfSmJ-TPZt_1G6xPdV7ZtEnjE1YTki08fcTnGWhWg8IuWQUfiwbFk9G1URdU';
+      const player = new Spotify.Player({
+        name: 'Web Playback SDK Quick Start Player',
+        getOAuthToken: cb => { cb(token); }
+      });
+
+      // Error handling
+      player.addListener('initialization_error', ({ message }) => { console.error(message); });
+      player.addListener('authentication_error', ({ message }) => { console.error(message); });
+      player.addListener('account_error', ({ message }) => { console.error(message); });
+      player.addListener('playback_error', ({ message }) => { console.error(message); });
+
+      // Playback status updates
+      player.addListener('player_state_changed', state => { console.log(state); });
+
+      // Ready
+      player.addListener('ready', ({ device_id }) => {
+        console.log('Ready with Device ID', device_id);
+      });
+
+      // Connect to the player!
+      player.connect();
+    };
+  </script>
+  <iframe src="https://open.spotify.com/embed?uri=spotify:album:1DFixLWuPkv3KT3TnV35m3&theme=white" width="301" height="381" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+</body>
+</html>
