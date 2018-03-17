@@ -11,7 +11,11 @@
 	// on connection to server, ask for user's name 
 	socket.on('connect', function(){
 		// call the server-side function 'adduser' with username
-		socket.emit('adduser', prompt("Name"));  //For now prompt a username
+		var username = prompt("Name");
+		if (username == ""){
+			username = "Guest" + Math.floor(Math.random() * 101); ; //Random username
+		}
+		socket.emit('adduser', username);  //For now prompt a username
 	});
 
 	// listener, whenever the server emits 'updatechat', this updates the chat body
@@ -35,7 +39,6 @@
 	function switchRoom(room){
 		socket.emit('switchRoom', room);
 	}
-
 	// on load of page
 	$(function(){
 		// when the client clicks SEND
@@ -59,10 +62,13 @@
 	//		});
 		//Creating room
 		$('#createroom').click(function() {
-		socket.emit('addroom', prompt("Enter your roomname."));
-			});
+			var roomname = prompt("Enter your roomname.");
+			if (roomname == ""){
+				roomname = "Room" + Math.floor(Math.random() * 101); ;
+			}
+			socket.emit('addroom', roomname);
+		});
 	});
-
 </script>
 <!--
 <input type="text" id="username"/>

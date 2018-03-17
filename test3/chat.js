@@ -66,11 +66,8 @@ io.sockets.on('connection', function (socket) {
 	// when the user disconnects.. perform this
 	socket.on('disconnect', function(){
 		// remove the username from global usernames list
-		if (usernames[socket.username]){
-			delete usernames[socket.username];
-		}
+		delete users[socket.username];
 		// update list of users in chat, client-side
-		io.sockets.emit('updateusers', usernames);
 		// echo globally that this client has left
 		socket.broadcast.emit('updatechat', 'SERVER', socket.username + ' has disconnected');
 		socket.leave(socket.room);
