@@ -1,27 +1,102 @@
-        <script src="https://sdk.scdn.co/spotify-player.js"> </script>
-        <script>
-            window.onSpotifyWebPlaybackSDKReady = () => {
-              const token = 'BQA3t8j6QGP8dMELWQM2d6B8XrMQja5daR1Qd1y2EBEb2cEY-SoyEEmJ_NPaCEzNXBazg8KEEQ3iSGNA8KkaVcrZvoHs2PGcy5cQdux5CQjbfSmJ-TPZt_1G6xPdV7ZtEnjE1YTki08fcTnGWhWg8IuWQUfiwbFk9G1URdU';
-              const player = new Spotify.Player({
-                name: 'Web Playback SDK Quick Start Player',
-                getOAuthToken: cb => { cb(token); }
-              });       
+<style>
+#chatbox {
+    width: 500px;
+    height: 300px;
+    border: 10px;
+    padding: 5px;
+    overflow: auto;
+  }
+</style>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<iframe id="spotify" src="" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+  var socket = io.connect('http://localhost:8080');
+  // on connection to server, ask for user's name 
+  socket.on('connect', function(){
+    // call the server-side function 'adduser' with username
+    var username = prompt("Name");
+    if (username == ""){
+      username = "Guest" + Math.floor(Math.random() * 101); ; //Random username
+    }
+    socket.emit('adduser', username);  //For now prompt a username
+  });
 
-              // Error handling
-              player.addListener('initialization_error', ({ message }) => { console.error(message); });
-              player.addListener('authentication_error', ({ message }) => { console.error(message); });
-              player.addListener('account_error', ({ message }) => { console.error(message); });
-              player.addListener('playback_error', ({ message }) => { console.error(message); });       
+  // listener, whenever the server emits 'updatechat', this updates the chat body
+  socket.on('updatechat', function (username, data) {
+    $('#chatbox').append('<b>'+ username + ':</b> ' + data + '<br>');
+  });
 
-              // Playback status updates
-              player.addListener('player_state_changed', state => { console.log(state); });     
+  socket.on('updateURI',function(albumID){
+    console.log("Updating URI");
+    $('#spotify').attr("src","https://open.spotify.com/embed?uri="+albumID);
+  });
+  // listener, whenever the server emits 'updaterooms', this updates the room the client is in
+  socket.on('updaterooms', function(rooms, current_room){
+    $('#rooms').empty();
+    $.each(rooms, function(key, value) {
+      if(value == current_room){
+        $('#rooms').append('<div>' + value + '</div>');
+      }
+      else {
+        $('#rooms').append('<div><a href="#" onclick="switchRoom(\''+value+'\')">' + value + '</a></div>');
+      }
+    });
+  });
 
-              // Ready
-              player.addListener('ready', ({ device_id }) => {
-                console.log('Ready with Device ID', device_id);
-              });       
-
-              // Connect to the player!
-              player.connect();
-            };
-          </script>
+  function switchRoom(room){
+    socket.emit('switchRoom', room);
+  }
+  // on load of page
+  $(document).ready(function() {
+    // when the client clicks SEND
+    $('#datasend').click( function() {
+      var message = $('#data').val();
+      $('#data').val('');
+      // tell server to execute 'sendchat' with message parameter
+      socket.emit('sendchat', message);
+    });
+    // same when Enter is pressed
+    $('#data').keypress(function(e) {
+      if(e.which == 13) {
+        var message = $('#data').val();
+        $('#data').val('');
+        socket.emit('sendchat', message);
+      }
+    });
+  //  $("#setuser").click( function(){
+  //    var username = $("#username").val();
+  //    socket.emit('adduser', username);  //For now prompt a username
+  //    });
+    //Creating room
+  $('#createroom').click(function() {
+      var roomname = prompt("Enter your roomname.");
+      var uri = prompt("Enter your URI, or nothing for default.\n(Default is DMX's Rudolph the Rednose Raindeer.)")
+      if (roomname == ""){
+        roomname = "Room" + Math.floor(Math.random() * 101); ;
+      }
+      if (uri ==""){
+        uri = "spotify:track:6tN6rdEfm6ZtuKsqpoh3on"
+      }
+      socket.emit('addroom', roomname,uri);
+    });
+  //Script to change the album on the page for all users.
+  $("#changeAlbum").click(function() {
+    console.log("AlbumID clicked")
+     var albumid = prompt("Enter the new URI.")
+      socket.emit('changeAlbum',albumid);
+       });
+    });
+</script> 
+<div style="float:left;width:100px;border-right:1px solid black;height:300px;padding:10px;overflow:scroll-y;">
+  <b>Rooms</b>
+  <input type="button" id="createroom" value="Create Room">
+  <div id="rooms"></div>
+</div>
+<div>
+  <div id="chatbox"></div>
+  <input id="data" style="width:200px;" />
+  <input type="button" id="datasend" value="send" />
+ <input type="button" id="changeAlbum" value="Change Album" />
+</div>
